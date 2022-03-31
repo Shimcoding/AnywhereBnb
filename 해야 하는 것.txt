@@ -98,6 +98,21 @@ loca | city | 구 | 읍,면,동
 
 
 
+
+buyer_name
+title
+address
+price
+buyer_email
+buyer_tel
+su
+
+
+
+
+
+
+
 content: '<div style="width:150px;text-align:center;padding:6px 0;">'+textpo[i].text+'</div>' // 인포윈도우에 표시할 내용
 
 
