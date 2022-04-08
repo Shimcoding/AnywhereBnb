@@ -1,0 +1,114 @@
+발표할 때 흐름 생각
+시연 생각
+서버 세팅
+
+1.war 파일 이름 test로 바꾸기
+2.bin에 파일 넣기
+3.bin에서 셧다운 
+4.bin에서 startup
+5.http://10.10.1.88:8080/test1
+
+
+발표자료랑 기능잘동작하는지 발표시나리오 발표준비
+
+
+01084850487 세인님
+
+
+
+
+
+
+
+Xshell 6 (Build 0207)
+Copyright (c) 2002 NetSarang Computer, Inc. All rights reserved.
+
+Type `help' to learn how to use Xshell prompt.
+[C:\~]$ 
+
+Connecting to 10.10.1.88:22...
+Connection established.
+To escape to local shell, press 'Ctrl+Alt+]'.
+
+Last login: Fri Apr  8 11:22:02 2022
+/usr/bin/xauth:  file /home/intern/.Xauthority does not exist
+[intern@localhost ~]$ ls
+apache-tomcat-8.5.78  apache-tomcat-8.5.78.tar.gz
+[intern@localhost ~]$ cd apache-tomcat-8.5.78/
+[intern@localhost apache-tomcat-8.5.78]$ ls
+bin           conf             lib      logs    README.md      RUNNING.txt  webapps
+BUILDING.txt  CONTRIBUTING.md  LICENSE  NOTICE  RELEASE-NOTES  temp         work
+[intern@localhost apache-tomcat-8.5.78]$ cd webapps/
+[intern@localhost webapps]$ ls
+docs  examples  host-manager  manager  ROOT  test  test.war
+[intern@localhost webapps]$ cd ../
+[intern@localhost apache-tomcat-8.5.78]$ ls
+bin           conf             lib      logs    README.md      RUNNING.txt  webapps
+BUILDING.txt  CONTRIBUTING.md  LICENSE  NOTICE  RELEASE-NOTES  temp         work
+[intern@localhost apache-tomcat-8.5.78]$ cd bin/
+[intern@localhost bin]$ ls
+bootstrap.jar       ciphers.sh                    daemon.sh         shutdown.bat     tomcat-native.tar.gz
+catalina.bat        commons-daemon.jar            digest.bat        shutdown.sh      tool-wrapper.bat
+catalina.sh         commons-daemon-native.tar.gz  digest.sh         startup.bat      tool-wrapper.sh
+catalina-tasks.xml  configtest.bat                setclasspath.bat  startup.sh       version.bat
+ciphers.bat         configtest.sh                 setclasspath.sh   tomcat-juli.jar  version.sh
+[intern@localhost bin]$ ./ shutdown
+-bash: ./: Is a directory
+[intern@localhost bin]$ ./ shutdown.sh
+-bash: ./: Is a directory
+[intern@localhost bin]$ ./shutdown.sh 
+Using CATALINA_BASE:   /home/intern/apache-tomcat-8.5.78
+Using CATALINA_HOME:   /home/intern/apache-tomcat-8.5.78
+Using CATALINA_TMPDIR: /home/intern/apache-tomcat-8.5.78/temp
+Using JRE_HOME:        /usr
+Using CLASSPATH:       /home/intern/apache-tomcat-8.5.78/bin/bootstrap.jar:/home/intern/apache-tomcat-8.5.78/bin/tomcat-juli.jar
+Using CATALINA_OPTS:   
+[intern@localhost bin]$ ./startup.sh 
+Using CATALINA_BASE:   /home/intern/apache-tomcat-8.5.78
+Using CATALINA_HOME:   /home/intern/apache-tomcat-8.5.78
+Using CATALINA_TMPDIR: /home/intern/apache-tomcat-8.5.78/temp
+Using JRE_HOME:        /usr
+Using CLASSPATH:       /home/intern/apache-tomcat-8.5.78/bin/bootstrap.jar:/home/intern/apache-tomcat-8.5.78/bin/tomcat-juli.jar
+Using CATALINA_OPTS:   
+Tomcat started.
+[intern@localhost bin]$ cd ..
+[intern@localhost apache-tomcat-8.5.78]$ ls
+bin           conf             lib      logs    README.md      RUNNING.txt  webapps
+BUILDING.txt  CONTRIBUTING.md  LICENSE  NOTICE  RELEASE-NOTES  temp         work
+[intern@localhost apache-tomcat-8.5.78]$ cd conf/
+[intern@localhost conf]$ ls
+Catalina         catalina.properties  jaspic-providers.xml  logging.properties  tomcat-users.xml  web.xml
+catalina.policy  context.xml          jaspic-providers.xsd  server.xml          tomcat-users.xsd
+[intern@localhost conf]$ vi server.xml 
+[intern@localhost conf]$ ls
+Catalina         catalina.properties  jaspic-providers.xml  logging.properties  tomcat-users.xml  web.xml
+catalina.policy  context.xml          jaspic-providers.xsd  server.xml          tomcat-users.xsd
+[intern@localhost conf]$ cd ..
+[intern@localhost apache-tomcat-8.5.78]$ ls
+bin           conf             lib      logs    README.md      RUNNING.txt  webapps
+BUILDING.txt  CONTRIBUTING.md  LICENSE  NOTICE  RELEASE-NOTES  temp         work
+[intern@localhost apache-tomcat-8.5.78]$ cd webapps/
+[intern@localhost webapps]$ ls
+docs  examples  host-manager  manager  ROOT  test  test.war
+[intern@localhost webapps]$ cd ..
+[intern@localhost apache-tomcat-8.5.78]$ ls
+bin           conf             lib      logs    README.md      RUNNING.txt  webapps
+BUILDING.txt  CONTRIBUTING.md  LICENSE  NOTICE  RELEASE-NOTES  temp         work
+[intern@localhost apache-tomcat-8.5.78]$ cd bin/
+[intern@localhost bin]$ ls
+bootstrap.jar       ciphers.sh                    daemon.sh         shutdown.bat     tomcat-native.tar.gz
+catalina.bat        commons-daemon.jar            digest.bat        shutdown.sh      tool-wrapper.bat
+catalina.sh         commons-daemon-native.tar.gz  digest.sh         startup.bat      tool-wrapper.sh
+catalina-tasks.xml  configtest.bat                setclasspath.bat  startup.sh       version.bat
+ciphers.bat         configtest.sh                 setclasspath.sh   tomcat-juli.jar  version.sh
+[intern@localhost bin]$ cd ..
+[intern@localhost apache-tomcat-8.5.78]$ cd ..
+[intern@localhost ~]$ ls
+apache-tomcat-8.5.78  apache-tomcat-8.5.78.tar.gz
+[intern@localhost ~]$ cd ap
+-bash: cd: ap: No such file or directory
+[intern@localhost ~]$ cd apache-tomcat-8.5.78/
+[intern@localhost apache-tomcat-8.5.78]$ ls
+bin           conf             lib      logs    README.md      RUNNING.txt  webapps
+BUILDING.txt  CONTRIBUTING.md  LICENSE  NOTICE  RELEASE-NOTES  temp         work
+[intern@localhost apache-tomcat-8.5.78]$ 
