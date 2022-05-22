@@ -1,0 +1,2213 @@
+*1강
+
+자바로 웹 프로그램을 만들게 되면 서버 프로그램이 된다.
+
+자바 프로그램 -> 자바 웹 프로그램 -> 웹 개발자를 위한 학습 로드맵
+
+백엔드
+JDK + Servlet + JSP + JDBC -> 자바 웹 개발
+
+자바, HTML, CSS, JDBC는 사전에 미리 공부
+
+자바 웹 개발을 하려면
+서블릿을 먼저 공부 -> JSP 공부 -> JSP MVC 공부
+추후에 스프링 MVC까지 공부
+
+
+
+*2강
+
+웹 서버 프로그램
+
+클라이언트 프로그램 / 서버 프로그램
+
+데이터가 아닌 문서를 전달하는 웹을 사용하면?
+웹 클라이언트 -> HTTP(웹) -> 웹 서버
+get request ->  HTTP(웹) -> 웹서버
+웹 클라이언트 <- HTTP(웹) <- get response
+
+웹으로 오면서 클라이언트 프로그램이 사라짐. 서버 프로그램만 만들면 됌.
+
+클라이언트 쪽이 프론트 엔드, 서버 쪽이 백 엔드
+
+
+
+*3강
+
+웹 서버 구성
+실행 환경 Web Server + WAS(Web Application Server)
+WAS <- server App = servlet
+
+웹 서버 응용 프로그램을 Servlet이라 명칭?
+
+톰캣 설치 후 jdk 환경 변수 지정
+1.https://tomcat.apache.org/download-90.cgi 들어가서 톰캣 설치
+2.jdk 설치
+3.시스템 설정 가서 jdk가 있는 곳으로 JAVA_HOME 만들고 경로 넣죽
+4.톰캣 폴더 -> bin에 startup 배치 파일 실행에서 엑세스 허용, 이상한 글자들 나오면 성공
+5.브라우저에 http://localhost:8080/ 치면 톰캣 하면 나오면 성공
+
+
+
+*4강
+
+톰캣이 WAS, 톰캣은 웹 서버
+
+텍스트 파일 내용 홈페이지에 나오게 하기
+1.D:\tools\apache-tomcat-9.0.53\webapps\ROOT 에 텍스트 파일 저장
+2.startup 실행
+3.http://localhost:8080/[텍스트 파일]
+4.나오면 성공
+
+
+
+*5강
+
+Context 사이트 추가하기
+
+물리적으로는 두 개의 사이트이지만 같이 서비스를 돌아가게 하는 것(하나만 있는 것처럼)
+http://IP(or hostname):Port/context 리소스들
+
+1.root에 it 폴더 생성 news.txt 생성 후 아까처럼 홈페이지에 나오게 하기
+2.it 폴더를 끄집어 내서 webapps 폴더에 넣기
+3.config 폴더에 server.xml에 host 부분에 <Context path="it" docBase="D:\tools\apache-tomcat-9.0.53\webapps\ITWeb" privileged="true" />
+넣기
+4.서버 다시 껐다가 킨다. 오류 안 나고 브라우저에 http://172.30.1.3:8080/it/news.txt 넣어서 들어가지면 성공
+(server.xml 복사본 만들어 놓기)
+
+
+
+*6강
+
+서블릿 만들기
+
+자바 서버 어플리케이션
+
+서블릿 코드 작성과 실행
+
+import java..
+import javax....
+
+public class nana extends HttpServlet
+{
+	public void serviec()
+	{
+	}
+}
+
+-> nana Servlet
+
+
+1.메모장 열어서 타이핑
+import javax.serlet.*;
+import javax.servlet.http.*;
+import java.io.*;
+
+public class Nana extends HttpServlet
+{
+  public void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
+  {
+    System.out.println("Sora aoi");
+  }
+}
+
+Nana.java로 저장
+2.cmd에서 javac 되는지 확인(안 되면 환경변수에 javac.exe 파일이 있는 곳을 새로 만들기)
+3.javac 되면 Nana.java가 있는 곳에 들어가 cmd에서 javac Nana.java 실행 -> Servlet 오류가 떠야 정상
+4.javac -cp D:\tools\apache-tomcat-9.0.53\lib\servlet-api.jar Nana.java cmd에 입력
+5.아무 이상없이 실행되고 class 파일 만들어 지면 성공
+
+
+
+*8강
+
+톰캣에 의해서 서블릿 코드 실행되도록 코드 배치와 요청
+
+Root 안에 nana.txt
+WEB-INF/classes/Nana.class
+
+Nana.class를 요청하는 방법
+
+서블릿이 실행되는 시점과 방식
+사용자가 요청 -> URL과 매핑된 Servlet 코드를 찾아서 실행 
+
+WEB-INF는 외부에서 절대 요청할 수 없는 폴더
+
+1.D:\tools\apache-tomcat-9.0.53\webapps\ROOT\WEB-INF 에 web.xml 편집
+2. <servlet>
+    <servlet-name>na</servlet-name>
+    <servlet-class>Nana</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>na</servlet-name>
+    <url-pattern>/hello</url-pattern>
+  </servlet-mapping> 입력
+3.http://localhost:8080/hello 브라우저에 입력 후 오류가 안 나고 흰 화명만 있으면 성공
+
+
+
+*9강
+
+Servlet 문자열 출력
+
+입력과 출력이 다름.
+
+Servlet 웹 입/출력 API
+
+서블릿 코드 작성하기 : response를 이용한 출력방법
+
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.io.*;
+
+public class Nana extends HttpServlet
+{
+  public void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
+  {
+    OutputStream os = response.getOutputStream();
+    PrintStream out = new PrintStream(os, true);
+    out.println("Hello Sora!!");
+  }
+}
+
+문자열을 출력할 때에는
+PrintWriter가 바람직하다.(다국어 사용 가능)
+
+
+
+*10강
+
+웹 개발을 위한 이클립스 IDE 준비하기
+
+프로젝트 관리 + 코드 편집 도구 ㅣ 코드 수정의 편리함
+
+코드 수정 + 컴파일 + 배포 + 톰켓 서버 재시작 + 브라우저로 요청 -> Ctrl + F11
+
+Eclipse IDE for java EE Developers
+
+
+
+*11강
+
+이클립스에서 Nana 서블릿 작성하기
+
+JSPPrj -> 마우스 오른쪽 Properties -> Context root 이름을 / 로 변경
+
+톰캣 ROOT에 있는 web.xml을 가져온다.
+
+src/main/java에
+패키지 명 : com.newlecture.web
+클래스 명 : Nana
+생성
+
+
+package com.newlecture.web;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class Nana extends HttpServlet{
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		PrintWriter out = resp.getWriter();
+		out.println("Hello Sora aoi~~");
+	}
+}
+
+안에 작성
+
+web.xml에
+패키지명 추가해서 실행
+
+잘 나오면 성공
+
+
+
+*12강
+
+Annotation을 이용한 URL 매핑
+
+어노테이션으로 설정하기 위해서
+@WebServlet("/hello")
+
+metadata-complete="false"
+
+web.xml에 nana 부분 주석
+
+Nana.java 에
+@WebServlet("/hi") 후 실행해서 잘 나오면 성공
+
+
+
+*13강
+
+출력 연습하기
+
+브라우저에 콘텐츠 형식을 알려주지 않은 경우 : 자의적인 해석
+html 해석
+text 해석
+
+
+
+*14강
+
+한글과 콘텐츠 형식 출력하기
+
+한글이 깨지는 이유 두 가지
+-서버에서 한글을 지원하지 않는 문자코드로 인코딩한 경우
+-서버에서는 UTF-8로 인코딩해서 보냈지만 브라우저가 다른 코드로 잘못 해석한 경우
+
+어떤 인코딩 방식으로 읽느냐에 따라 깨진다.
+
+response.setCharacterEncoding("UTF-8"); //쓰기로 해서 보내는 것
+		response.setContentType("text/html; charset=UTF-8"); //브라우저에 
+
+이 방식을 통해서 한글이 안 깨짐.
+
+
+
+*15강
+
+사용자 입력 다루기
+
+GET 요청과 쿼리 스트링
+
+GET 요청
+무엇을 달라고 하는 요청에는 옵션이 있을 수 있다.
+
+http://localhost/hello
+http://localhost/hello?cnt=3 
+
+int cnt = Integer.parseInt(request.getParameter(("cnt")));
+		
+		for (int i = 0; i < cnt; i++) {
+			out.println((i+1)+": 소라 아오이 Servlet!!<br/>");
+		}
+
+http://localhost/hi 라고 넣으면 오류남
+http://localhost/hi?cnt=3 라고 넣으면 3번 출력
+
+
+
+*16강 
+
+기본 값 사용하기
+
+입력 값에 기본 값을 사용하기
+
+전달 방식의 차이
+/hello?cnt=3  -> 3
+/hello?cnt=   -> ""
+/hello?       ->null
+/hello        ->null
+
+String temp = request.getParameter("cnt");
+		int cnt = 0;
+		if(temp != null && !temp.equals("")) {
+			cnt = Integer.parseInt(temp);
+		}
+		
+		for (int i = 0; i < cnt; i++) {
+			out.println((i+1)+": 소라 아오이 Servlet!!<br/>");
+		}
+
+index.html 에
+<a href="hi">인사하기</a><br>
+<a href="hi?cnt=3">인사하기</a><br>
+
+위에 거는 100번 출력
+아래 거는 3번 출력되면 성공
+
+
+
+*17강
+
+사용자 입력을 통한 GET 요청
+
+반복 횟수를 사용자로부터 입력 받으려면 입력폼을 준비해야 한다.
+
+window -> pre~ 에 -> web에 각각 파일에 인코딩 UTF-8로 바뀌면 바뀜
+
+hello.html에
+<div>
+		<form action="hi">
+			<div>
+				<label>"소라 아오이"를 몇 번 듣고 싶으세요?</label>		
+			</div>
+			<div>
+			<input name="cnt" type="text" />
+			<input type="submit" value="출력" />
+			</div>
+		</form>
+	</div>
+hi 로 들어가서 
+http://localhost:8080/hi?cnt=2 이렇게 브라우저에 입력되는 것을 볼 수 있음.
+
+
+
+*18강
+
+사용자 입력 다루기
+
+입력할 내용이 많은 경우는 POST 요청
+
+POST 요청의 일반적인 요청 방식
+요청과 제출, 두 단계로 나눠서 일을 처리하려고 할 때의 두 가지 요청.
+
+get 방식은 쿼리 값을 전달.
+post 방식은 쿼리 값에 안 붙어서 전달.
+
+f12 네트워크를 통해 어떻게 흘러 가는지 확인
+
+
+
+*19강
+
+한글 입력 문제
+
+멀티 바이트 문자 전송 문제: 사용자로부터 값 입력 받아서 전송하기
+
+멀티 바이트 : 2바이트가 한 문자(영어는 1바이트가 한 문자)
+
+톰캣은 ISO-8859-1 방식으로 입력 받음(1바이트로 읽기 때문에 한글이 깨짐)
+
+해결 방법 두 가지
+
+서버 설정을 손 댈 수 없는 경우
+request.setCharacterEncoding("UTF-8");
+
+
+
+*20강
+
+서블릿 필터
+
+웹 서버 <-> WAS ->(request) <-> (response) Servlet
+
+필터
+was에서 servlet 가는 중간에 가로챈다.
+접근 권한, 실행할 것인지 말 것인지 결정
+사전과 사후에 실행
+
+
+
+*21강
+
+학습 과제
+(사용자 입력을 통한 계산 요청)
+
+숫자 두 개를 입력해서 계산하는 html 만들기
+
+
+
+*22강
+
+서블릿 클래스를 쉽게 만들 수 있음.
+
+서블릿 클릭
+
+
+
+*23강
+
+여러 개의 Submit 버튼
+
+사용자로부터 계산을 위한 값을 입력 받아서 계산을 요청한다.
+
+같은 name을 공유해도 서블릿 코드에서 if 문을 통해 다른 결과를 가져올 수 있다.
+
+
+
+*24강
+
+입력 데이터 배열로 보내기
+
+동적으로 데이터 보내기
+
+모든 경우를 name을 줄 수 없음.
+
+같은 name을 가지고 서블릿에 보내면 반복문을 통해 값을 꺼낼 수 있다.
+
+서블릿에서
+String[] num = request.getParameterValues("num");
+배열로 받음
+
+html에
+<input name="num" type="text" />
+			<input name="num" type="text" />
+			<input name="num" type="text" />
+			<input name="num" type="text" />
+
+
+String[] num_ = request.getParameterValues("num");
+		
+		int result = 0;
+		
+		for (int i = 0; i < num_.length; i++) {
+			int num = Integer.parseInt(num_[i]);
+			result += num;
+		}
+
+
+
+*25강
+
+상태 유지의 필요성
+
+서블릿들 간에 공유할 수 잇는 것이 필요함.
+
+상태 유지를 위한 5가지 방법
+어플리케이션, 세션, 쿠키 - 값을 담아 둘 수 있는 공간
+
+히든 인풋, 쿼리스트링(나중에 배움)
+
+Cal2.java, calc2.html
+
+
+*26강
+
+Application 객체
+
+Application 저장소 : 서블릿 컨텍스트(Context)
+
+
+calc2.html에
+<form action="calc2" method="get">
+		<div>
+			<label>입력 :</label>
+			<input name="v" type="text" />
+		</div>
+		<div>
+			<input type="submit" name="operator" value="+" />
+			<input type="submit" name="operator" value="-" />
+			<input type="submit" name="operator" value="=" />
+		</div>
+	</form>
+
+Calc2.java 에
+@WebServlet("/calc2")
+public class Calc2 extends HttpServlet {
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		ServletContext application = request.getServletContext(); //Application 저장소
+	
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html; charset=UTF-8");
+		
+		String v_ = request.getParameter("v");
+		String op = request.getParameter("operator");
+			
+		int v = 0;
+		
+		if(!v_.equals("")) v = Integer.parseInt(v_);
+		
+		//계산
+		if(op.equals("=")) {
+			
+			int x = (Integer)application.getAttribute("value");
+			int y = v;
+			String operator = (String)application.getAttribute("op");
+			
+			int result = 0;
+			
+			if(operator.equals("+"))
+				result = x+y;
+			else
+				result = x-y;
+			
+			response.getWriter().printf("값은: %d\n",result);
+		}
+		//값을 저장
+		else {
+			application.setAttribute("value", v);
+			application.setAttribute("op", op);
+		}
+		
+	}
+
+}
+
+3을 입력 후 +를 누르면 흰 화면 나옴. 그 다음 뒤로가기해서 2를 입력 후 =을 누르면 값 나옴.
+
+
+
+*27강
+
+Session 객체로 상태 값 저장하기(그리고 Application 객체와의 차이점)
+
+HttpSession session = request.getSession();
+
+int x = (Integer)session.getAttribute("value");
+
+String operator = (String)session.getAttribute("op");
+
+
+세션 : 현재 접속한 사용자의 수
+
+다른 브라우저로 바로 =를 누르면 에러가 발생.
+그러나 같은 브라우저로 =를 누르면 이전 값에 대한 값이 나온다.
+
+즉, 다른 브라우저는 세션으로 인식하여, 다른 사용자로 인식한다는 것.
+크롬, 익스플로어, 엣지를 통해 해볼 것.
+
+
+
+*28강
+
+웹 서버가 현재 사용자(Session)을 구분하는 방식
+
+세션 ID와 사용자 저장소 구별
+
+같은 브라우저는 Cookie id가 같고, 다른 브라우저는 Cookie id가 다르다.
+
+세션 키 확인
+
+f12 -> 네트워크 안에 Cookie 확인
+
+
+세션 메소드
+-------------여기부터----------------------------
+void setAttribute(String name, Object value)
+지정된 이름으로 객체를 설정
+
+Object getAttribute(String name)
+지정한 이름의 객체를 반환
+
+void invalidate()
+세션에서 사용되는 객체들을 바로 해제
+
+--------------여기까지가 주로 사용하는 것들------
+
+void setMaxInactiveInterval(int interval)
+세션 타임아웃을 정수(초)로 설정
+
+boolean isNew()
+세션이 새로 생성되었는지를 확인
+
+Long getCreationTime()
+세션이 시작된 시간을 반환, 1970년 1월 1일을 시작으로 하는 밀리초
+
+long getLastAccessedTime()
+마지막 요청 시간, 1970년 1월 1일을 시작으로 하는 밀리초
+
+
+
+*29강
+
+Cookie를 이용해 상태 값 유지하기
+
+상태 저장을 위한 값의 저장소의 특징
+
+서블릿에서 사용할 수 있는 상태 저장소
+
+저장소 Cookie -> request 입력 도구 <-> 저장소 
+저장소 Cookie <- response 출력 도구 <-> 저장소
+
+
+쿠키 사용하기
+
+쿠키 저장하기
+Cookie cookie = new Cookie("c", String.valueOf(result));
+response.addCookie(cookie);
+
+쿠키 읽기
+Cookie[] cookies = request.getCokkies();
+String _c = "";
+
+if (cookies != null)
+	for(Cookie cookie : cookies)
+		
+
+Cacl2.java에
+
+Cookie[] cookies = request.getCookies();
+
+int x = 0;
+			for(Cookie c : cookies) {
+				if(c.getName().equals("value")) {
+					x = Integer.parseInt( c.getValue());
+					break;
+				}
+			}
+
+String operator = "";
+			for(Cookie c : cookies) {
+				if(c.getName().equals("op")) {
+					operator = c.getValue();
+					break;
+				}
+			}
+
+Cookie valuecookie = new Cookie("value", String.valueOf(v));
+			Cookie opcookie = new Cookie("op", op);
+			response.addCookie(valuecookie);
+			response.addCookie(opcookie);
+
+이렇게 해서 계산 작업이 되면 성공
+
+
+
+*30강
+
+Cookie의 path 옵션
+
+쿠키는 모든 페이지마다 동일한가?
+
+Calc2.java에
+Cookie valuecookie = new Cookie("value", String.valueOf(v));
+			Cookie opcookie = new Cookie("op", op);
+			valuecookie.setPath("/Calc2");
+			opcookie.setPath("/Calc2");
+
+
+설정에 들어가 값을 입력해서 실행하면 쿠키가 가는 것을 확인할 수 있다. 경로를 "/"로 설정하면 모든 곳에 쿠키가 가서 맞는 결과를 얻어 올 수 있지만 저렇게 "/Calc2"처럼 이 곳만 쿠키가 가도록 설정하면 다른 곳에서는 쿠키가 가지 않아 틀린 결과를 가져온다.
+
+
+
+*31강
+
+Cookie의 maxAge 옵션
+
+브라우저가 닫혀도 유효한가?
+
+브라우저가 쿠키를 저장하는 공간
+
+valuecookie.setMaxAge(60*60); //만료 날짜 설정
+
+만료 날짜를 설정한 쿠키는 브라우저가 꺼져도 사라지지 않는다.
+
+
+
+*32강
+
+Application / Session / Cookie의 차이점 정리
+
+상태 저장을 위한 값의 저장소의 특징
+
+application
+사용범위 : 전역 범위에서 사용하는 저장 공간
+생명주기 : WAS가 시작해서 종료할 때까지
+저장위치 : WAS 서버의 메모리
+
+Session
+사용범위 : 세션 범위에서 사용하는 저장 공간
+생명주기 : 세션이 시작해서 종료할 때까지
+저장위치 : WAS 서버의 메모리
+
+Cookie
+사용범위 : Web Browser별 지정한 path 범주 공간
+생명주기 : Browser에 전달한 시간부터 만료시간까지
+저장위치 : Web Browser의 메모리 또는 파일
+기간이 길면 쿠키에 저장
+특정 범위에서 사용하는 것은 쿠키에 저장
+
+
+
+*33강
+
+Application / Session / Cookie의 차이점 정리
+
+
+
+*34강
+
+서버에서 페이지 전환해주기(redirect)
+
+response.sendRedirect("calc2.html");
+
+이런식으로 요청하게 됨.
+
+
+
+*35강
+
+동적인 페이지(서버 페이지)의 필요성
+
+좀 더 현실적인 계산기 프로그램
+
+calc3.html, calc3.java
+
+
+
+*36강
+
+처음이자 마지막으로 동적인 페이지 서블릿으로 직접 만들기
+
+요청 Method에 따른 특화된 메소드들을 이용하기
+
+init() -> service(...) -> doGet(...)
+		       -> doPost(...)
+
+CalcPage.java
+
+
+
+*37강
+
+계산기 서블릿 구성하기
+
+JSPPrj/pon.xml 생성 후
+<bulid> 위에
+<dependency>
+	    <groupId>org.graalvm.js</groupId>
+	    <artifactId>js</artifactId>
+	    <version>19.2.0.1</version>
+	</dependency>  
+	<dependency>
+	    <groupId>org.graalvm.js</groupId>
+	    <artifactId>js-scriptengine</artifactId>
+	    <version>19.2.0.1</version>
+	</dependency>
+
+  </dependencies>
+
+넣어서 엔진 되게 함.
+
+
+
+*38강
+
+쿠키 삭제하기
+
+expCookie.setMaxAge(0); 쿠키를 지우는 것
+
+
+
+*39강
+
+GET/POST에 특화된 서비스 함수
+
+요청 Method에 따른 특화된 메소드들을 이용하기
+
+super.service(req, resp);
+init() -> service()
+
+404 에러 - url이 없다
+405 에러 - url은 있다. 그러나 요청하는 로직은 없다.
+
+
+calculator.html에
+
+<form action="calculator" method="get">
+		<input type="submit" value="요청">
+	</form>
+
+
+Calculator.java에
+@WebServlet("/calculator")
+public class Calculator extends HttpServlet{
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		System.out.println("doGET 메소드가 호출되었습니다.");
+	}
+	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		System.out.println("doPOST 메소드가 호출 되었습니다.");
+	}
+}
+
+이러면 요청을 클릭하면 method에 따라 doGet, doPost가 출력됨.
+
+
+
+*40강
+
+계산기 프로그램 하나의 서블릿으로 합치기
+
+GET 요청 후 POST 요청
+
+서로 다른 요청 방식
+
+CalPage.java
+Calculator.java
+caculator.html
+
+
+
+*41강
+
+JSP를 이용한 자바 웹 프로그래밍
+
+JSP 웹 프로그래밍
+
+HTML 출력이 많은 결과 페이지
+
+서블릿 출력 코드에서 HTML을 출력하는 방법
+
+Jasper가 만들어 주는 서블릿 출력 코드
+
+확장자를 .jsp로 바꾸면 출력하는 코드로 바꿈
+
+<% %> : 자바 코드로 인식, 출력 x
+
+Jasper가 올바르게 일을 할 수 있도록 .jsp에 값을 넣어준다.
+
+
+
+*42강
+
+JSP 코드 블록
+
+서블릿 출력 코드에서 HTML을 출력하는 방법
+
+코드 블록의 종류
+1. 출력 코드 out.write
+2. 코드 블록 : <% %>
+3. 코드 블록 : <% out.print(y) %> -> <%=y %>
+4. 선언부 : 멤버함수,멤버변수에 넣고 싶을 때
+<%!
+public int sum(int a, int b)
+{
+	return a+b;
+}
+%>
+5.초기 설정을 위한 Page 지시자(지시 블록)
+<%@ ~ %>
+
+코드 블록의 초기 설정
+
+
+
+*43강
+
+JSP 내장 객체 간략히 들여다 보기
+
+코드 블록의 내장 객체
+
+JSP 내장 객체 
+request, response, pageContext, application, session, config, out, page...
+
+내장 객체 request : HttpServletRequest
+
+내장 객체 response : HttpservletResponse
+
+내장 객체 out : javax.servlet.jsp.JspWriter
+
+내장 객체 session : javax.servlet.http.HttpSession
+
+내장 객체 application : javax.servlet.ServletContext
+
+
+
+*44강
+
+JSP로 만드는 Hello 서블릿
+
+
+
+*45강
+
+스파게티 코드를 만드는 JSP
+
+spag.jsp
+
+
+
+*46강
+
+JSP MVC model1
+
+일반적인 JSP 프로그래머가 구현하게 되는 코드
+
+/*-- 입력 코드---------------------------------*/
+
+입력과 제어를 담당 : Controller [자바 코드]
+
+/*-- 출력 코드---------------------------------*/
+
+출력 담당 : View [HTML 코드]
+
+출력 데이터 : Model
+
+
+자바 코드와 HTML 코드를 분리!
+
+
+
+
+*47강
+
+JSP MVC model1 vs model2
+
+model 1 : 컨트롤러와 뷰가 물리적으로 분리되지 않은 방식
+
+model 2 : 컨트롤러와 뷰가 물리적으로 분리된 방식
+
+MVC model2 : Dispatcher를 집중화하기 전의 모델
+
+사용자 -> 톰캣 <-> controller & Dispatcher(하나) -> view : jsp
+
+
+Controller
+Spag.java 서블릿
+int num = 0;
+		String num_ = request.getParameter("n");
+		if(num_ != null && !num_.equals(""))
+			num = Integer.parseInt(num_);
+		
+		String result;
+		
+		 if(num % 2 != 0) 
+			result = "홀수";
+		 else
+			result = "짝수";
+		 
+		 request.setAttribute("result", result);
+		 
+		 //redirect : 새로운 요청
+		 //forward  : 현재 작업을 이어가는 것
+		 RequestDispatcher dispatcher = request.getRequestDispatcher("spag.jsp"); //서블릿
+		 dispatcher.forward(request, response);
+
+
+View
+spag.jsp
+
+<%=request.getAttribute("result")  %>입니다.
+
+
+
+*48강
+
+View를 위한 데이터 추출 표현식 EL(Experssion Language)
+
+저장 객체에서 값을 추출해서 출력하는 표현식
+
+<%=request.getAttribute("result")  %>입니다.
+->  ${result}
+
+
+String[] names = {"a","b"};
+		 request.setAttribute("names", names);
+ ${names[1]} -> 리스트 꺼내기
+
+
+ Map<String, Object> notice = new HashMap<String, Object>();
+		 notice.put("id", 1);
+		 notice.put("title", "ELEL");
+		 request.setAttribute("notice", notice);
+
+${notice.title} -> 키가 title인 값 꺼내기
+
+
+
+*49강
+
+EL의 데이터 저장소
+
+저장 객체에서 값을 추출하는 순서
+
+page -> request -> session -> application
+
+page객체로 담은 것은 EL로 쓸 수 있다.
+<%
+pageContext.setAttribute("aa", "hello");
+%>
+${"aa"}
+
+Scope를 붙이면 특정한 한 위치에 저장소에서만 값을 가져올 수 있다.
+ex) ${sessionScope.cnt}
+
+
+${requestScope.result} <br>
+	${names[1]} <br>
+	${notice.title} <br>
+	${result} <br>
+	${param.n} <br>
+	${header.accept} <br>
+	${pageContext.request.method}
+
+
+
+*50강
+
+EL의 연산자
+
+[] .
+()
+not ! empty 
+-> ex) param.n == nul || param.n == '' -> empty
+* / div % mod
++ -
+< > <= >= lt gt le ge  -> html이 < > 를 사용하기 때문에 lt gt le ge를 사용(< > 쓸 수 없는 환경에서)
+== != eq ne
+&& and
+|| or
+? :
+
+
+
+*51강
+
+수업용 프로젝트 준비하기
+
+
+
+*52강
+
+JSP를 이용한 자바 웹 프로그래밍 시작하기
+
+Jasper를 이용한 코드 작성 방법
+
+모든 jsp 페이지에 한글 깨짐을 방지하기 위한 페이지 지시자 등록
+
+
+----------JDBC 강의------------------------------
+
+*JDBC 설치
+
+oracle.com -> JDBC Driver 검색 -> Oracle JDBC -> 여기서는 18c -> ojdbc8.jar 설치 -> 이클립스 -> 해당 프로젝트 빌드 패스 -> 컨피겨 빌드 패스 -> 라이브러리 -> add external jars 해서 넣어 줌
+
+
+
+*JDBC를 이용하는 자바 코드
+
+1.Class.forName("oracle.jdbc.driver.OracleDriver"); //드라이버 로드
+2.Connection con = DriverManager.getConnection(...); //연결 설정
+3.Statement st = con.createStatement(); //실행 도구 생성
+4.ResulSet rs = st.executeQuery(sql); //결과 집합 패치
+5.rs.next(); //레코드가 전달, 커서가 아래로 이동
+//Before Of File -> End Of File
+6.String title = rs.getString("title");
+
+
+
+String url = "jdbc:oracle:thin:@localhost:1521/xepdb1";
+		String sql = "SELECT * FROM NOTICE WHERE HIT >= 10";
+		
+		Class.forName("oracle.jdbc.driver.OracleDriver");
+		Connection con = DriverManager.getConnection(url,"newlec","oracle");
+		Statement st = con.createStatement();
+		ResultSet rs = st.executeQuery(sql);
+		
+		
+		while(rs.next()) {
+			String title = rs.getString("TITLE");
+			int id = rs.getInt("ID");
+			String writerId = rs.getString("WRITER_ID");
+			Date regDate = rs.getDate("REGDATE");
+			String content = rs.getString("CONTENT");
+			int hit = rs.getInt("hit");
+			
+			System.out.printf("%d %s %s %s %s %d\n",id,title,writerId,regDate,content,hit);
+		}
+		rs.close();
+		st.close();
+		con.close();
+
+
+
+
+*데이터 입력을 위한 쿼리문 준비하기
+
+SELECT NOTICE_SEQ.NEXTVAL FROM DUAL;
+-> 실행할 때마다 1씩 증가
+
+
+
+*데이터 입력하기와 PreparedStatement
+
+select가 아닐 경우에는 결과집합(resultset, .executeQuery)이 없다.
+update, insert 할 때에는 executeUpdat 사용
+
+
+con.prepareStatement(sql); //미리 시퀄 문을 준비해서 값을 채워놓은 준비만하고 나중에 실행하도록 하는 것.(?에 값을 채울 수 있음)
+
+
+String title = "TEST2";
+		String writerId = "newlec";
+		String content = "hahah";
+		String files = "";
+		
+		String url = "jdbc:oracle:thin:@localhost:1521/xepdb1";
+		String sql = "INSERT INTO notice ("
+				+ "    title,"
+				+ "    writer_id,"
+				+ "    content,"
+				+ "    files"
+				+ ") VALUES (?,?,?,?)";
+		
+		Class.forName("oracle.jdbc.driver.OracleDriver");
+		Connection con = DriverManager.getConnection(url,"newlec","oracle");
+		//Statement st = con.createStatement();
+		PreparedStatement st = con.prepareStatement(sql);
+		st.setString(1, title);
+		st.setString(2, writerId);
+		st.setString(3, content);
+		st.setString(4, files);
+		
+		int result = st.executeUpdate();
+		
+		System.out.println(result);
+		
+		st.close();
+		con.close();
+
+이러면 insert가 잘 동작함. TEST2가 잘 생성됨.
+
+
+
+*데이터 수정을 위한 쿼리 준비하기
+
+
+
+*데이터 수정 구현하기
+
+String title = "TEST3";
+		String content = "hahah3";
+		String files = "";
+		int id = 9;
+		
+		String url = "jdbc:oracle:thin:@localhost:1521/xepdb1";
+		String sql = "UPDATE NOTICE "
+				+ "SET"
+				+ "    TITLE=?,"
+				+ "    CONTENT=?,"
+				+ "    FILES=?"
+				+ "WHERE ID=?";
+		
+		Class.forName("oracle.jdbc.driver.OracleDriver");
+		Connection con = DriverManager.getConnection(url,"newlec","oracle");
+		//Statement st = con.createStatement();
+		PreparedStatement st = con.prepareStatement(sql);
+		st.setString(1, title);
+		st.setString(2, content);
+		st.setString(3, files);
+		st.setInt(4, id);
+		
+		int result = st.executeUpdate();
+		
+		System.out.println(result);
+		
+		st.close();
+		con.close();
+
+이러면 수정이 잘됨.
+
+
+
+*데이터 삭제하기
+
+int id = 9;
+		
+		String url = "jdbc:oracle:thin:@localhost:1521/xepdb1";
+		String sql = "DELETE NOTICE WHERE ID=?";
+		
+		Class.forName("oracle.jdbc.driver.OracleDriver");
+		Connection con = DriverManager.getConnection(url,"newlec","oracle");
+		//Statement st = con.createStatement();
+		PreparedStatement st = con.prepareStatement(sql);
+		st.setInt(1, id);
+		
+		int result = st.executeUpdate();
+		
+		System.out.println(result);
+		
+		st.close();
+		con.close();
+
+삭제가 잘됨.
+
+
+
+*CRUD를 담당하는 NoticeService 생성하기
+
+package com.newlecture.app.entity;
+
+import java.util.Date;
+
+public class Notice {
+	private String title;
+	private int id;
+	private String writerId;
+	private Date regDate ;
+	private String content ;
+	private int hit ;
+	
+	public Notice() {
+		
+	}
+	
+	
+	
+	public Notice(int id,String title, String writerId, Date regDate, String content, int hit) {
+		this.title = title;
+		this.id = id;
+		this.writerId = writerId;
+		this.regDate = regDate;
+		this.content = content;
+		this.hit = hit;
+	}
+
+
+
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getWriterId() {
+		return writerId;
+	}
+	public void setWriterId(String writerId) {
+		this.writerId = writerId;
+	}
+	public Date getRegDate() {
+		return regDate;
+	}
+	public void setRegDate(Date regDate) {
+		this.regDate = regDate;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	public int getHit() {
+		return hit;
+	}
+	public void setHit(int hit) {
+		this.hit = hit;
+	}
+	
+	
+	
+}
+
+
+
+
+package com.newlecture.app.service;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.newlecture.app.entity.Notice;
+
+public class NoticeService {
+	
+	public List<Notice> getList() throws ClassNotFoundException, SQLException{
+		
+		String url = "jdbc:oracle:thin:@localhost:1521/xepdb1";
+		String sql = "SELECT * FROM NOTICE WHERE HIT >= 10";
+		
+		Class.forName("oracle.jdbc.driver.OracleDriver");
+		Connection con = DriverManager.getConnection(url,"newlec","oracle");
+		Statement st = con.createStatement();
+		ResultSet rs = st.executeQuery(sql);
+		
+		List<Notice> list = new ArrayList<Notice>();
+		
+		while(rs.next()) {
+			int id = rs.getInt("ID");
+			String title = rs.getString("TITLE");
+			String writerId = rs.getString("WRITER_ID");
+			Date regDate = rs.getDate("REGDATE");
+			String content = rs.getString("CONTENT");
+			int hit = rs.getInt("hit");
+			
+			Notice notice = new Notice(
+					id,
+					title,
+					writerId,
+					regDate,
+					content,
+					hit
+						);
+			
+			list.add(notice); //목록에 하나씩 들어옴
+		}
+		rs.close();
+		st.close();
+		con.close();
+		
+		return list;
+	}
+	
+	public static void main(String[] args) {
+
+	}
+
+}
+
+
+
+*NoticeService 구현 마무리
+
+
+public class NoticeService {
+	private String url = "jdbc:oracle:thin:@localhost:1521/xepdb1";
+	private String uid = "newlec";
+	private String pwd = "oracle";
+	private String driver = "oracle.jdbc.driver.OracleDriver";
+	
+	public List<Notice> getList() throws ClassNotFoundException, SQLException{
+		
+		String sql = "SELECT * FROM NOTICE WHERE HIT >= 10";
+		
+		Class.forName(driver);
+		Connection con = DriverManager.getConnection(url,uid,pwd);
+		Statement st = con.createStatement();
+		ResultSet rs = st.executeQuery(sql);
+		
+		List<Notice> list = new ArrayList<Notice>();
+		
+		while(rs.next()) {
+			int id = rs.getInt("ID");
+			String title = rs.getString("TITLE");
+			String writerId = rs.getString("WRITER_ID");
+			Date regDate = rs.getDate("REGDATE");
+			String content = rs.getString("CONTENT");
+			int hit = rs.getInt("hit");
+			String files = rs.getString("FILES");
+
+			
+			Notice notice = new Notice(
+					id,
+					title,
+					writerId,
+					regDate,
+					content,
+					hit,
+					files
+						);
+			
+			list.add(notice); //목록에 하나씩 들어옴
+		}
+		rs.close();
+		st.close();
+		con.close();
+		
+		return list;
+	}
+	
+	public int insert(Notice notice) throws SQLException, ClassNotFoundException {
+		String title = notice.getTitle();
+		String writerId = notice.getWriterId();
+		String content = notice.getContent();
+		String files = notice.getFiles();
+		
+		String url = "jdbc:oracle:thin:@localhost:1521/xepdb1";
+		String sql = "INSERT INTO notice ("
+				+ "    title,"
+				+ "    writer_id,"
+				+ "    content,"
+				+ "    files"
+				+ ") VALUES (?,?,?,?)";
+		
+		Class.forName(driver);
+		Connection con = DriverManager.getConnection(url,uid,pwd);
+		//Statement st = con.createStatement();
+		PreparedStatement st = con.prepareStatement(sql);
+		st.setString(1, title);
+		st.setString(2, writerId);
+		st.setString(3, content);
+		st.setString(4, files);
+		
+		int result = st.executeUpdate();
+		
+		
+		st.close();
+		con.close();
+		
+		return result;
+	}
+	public int update(Notice notice) throws SQLException, ClassNotFoundException {
+		String title = notice.getTitle();
+		String content = notice.getContent();
+		String files = notice.getFiles();
+		int id = notice.getId();
+		
+		String url = "jdbc:oracle:thin:@localhost:1521/xepdb1";
+		String sql = "UPDATE NOTICE "
+				+ "SET"
+				+ "    TITLE=?,"
+				+ "    CONTENT=?,"
+				+ "    FILES=?"
+				+ "WHERE ID=?";
+		
+		Class.forName(driver);
+		Connection con = DriverManager.getConnection(url,uid,pwd);
+		//Statement st = con.createStatement();
+		PreparedStatement st = con.prepareStatement(sql);
+		st.setString(1, title);
+		st.setString(2, content);
+		st.setString(3, files);
+		st.setInt(4, id);
+		
+		int result = st.executeUpdate();
+		
+		
+		st.close();
+		con.close();
+		
+		return result;
+	}
+	public int delete(int id) throws SQLException, ClassNotFoundException {
+		
+		String url = "jdbc:oracle:thin:@localhost:1521/xepdb1";
+		String sql = "DELETE NOTICE WHERE ID=?";
+		
+		Class.forName(driver);
+		Connection con = DriverManager.getConnection(url,uid,pwd);
+		//Statement st = con.createStatement();
+		PreparedStatement st = con.prepareStatement(sql);
+		st.setInt(1, id);
+		
+		int result = st.executeUpdate();
+		
+		
+		st.close();
+		con.close();
+		
+		return result;
+	}
+
+}
+
+
+
+*사용자 인터페이스 붙이기(공지사항 목록)
+
+
+
+*공지사항 메뉴 붙이기
+
+
+
+*페이징을 위한 쿼리 만들기
+
+
+
+*목록을 위한 View 생성하기
+
+
+
+*이전 / 다음 구현하기
+
+
+
+*게시글 개수 구하기
+
+
+
+*마지막 페이지 구하기
+
+
+
+*검색 메뉴 붙이기
+
+
+
+*검색 서비스 추가하기
+
+
+
+
+
+--------------oracle 강의------------------------
+
+*oracle dbms 설치
+
+oracle.com -> oracle database express edition -> 여기선 database 18c express edition 설치 -> 압축 풀기 -> setup 관리자 권한으로 실행
+
+
+
+*sql develpoer 준비하기
+
+sql 작성 도구
+
+sql developer 설치
+orcale.com -> sql developer 입력 -> sql developer 설치 -> 
+
+
+
+*오라클 PDB 서버에 접속하기
+
+Seed PDB를 이용한 Pluggable 데이터베이스 생성
+> create pluggable database
+
+설치된 데이터베이스 확인
+버전과 PDB 확인
+> select name from v$pdbs;
+
+출력:
+NAME
+--------------------------------------------------------------------------------
+PDB$SEED
+XEPDB1  -> 가상의 데이터베이스
+
+
+원격 접속을 위한 설정 변경
+EXEC DBMS_XDB.SETLISTENERLOCALACCESS(FALSE);
+
+자신의 아이피로 오라클 학습용 서버에 입력 후 접속
+
+
+
+*수업용 사용자와 데이터베이스 생성하기
+
+Admin Accounts
+-SYS : SYSDBA 기능을 가지고 있음
+-SYSTEM
+
+
+데이터베이스와 데이터 파일 그리고 테이블 스페이스
+
+각각의 테이블, 인덱스 -> 스키마 -> 사용자
+
+
+PDB 서버에 system 계정으로 접속하기
+
+테이블 스키마 생성
+
+
+임시 스페이스, 테이블 저장 스페이스 만들기
+
+
+사용자 추가
+
+
+새로운 NEWLEC을 위한 데이터베이스 생성
+
+
+
+*MEMBER Table 생성하기
+
+SQL의 구분
+-DDL
+-DML(중요) : CRUD
+-DCL
+
+
+테이블 생성하기-CREATE
+
+테이블 정의하기 : 데이터 구조 정의하기 : 개념상의 데이터 정의하기 : Entity 정의하기
+
+CREATE TABLE MEMBER
+(
+    ID      VARCHAR2(50),
+    PWD     VARCHAR2(50),
+    NAME    VARCHAR2(50),
+    GENDER  VARCHAR2(50),
+    AGE     NUMBER,
+    BIRTHDAY VARCHAR2(50),
+    PHONE     VARCHAR2(50),
+    REGDATE  DATE
+);
+
+실행
+
+
+
+*오라클 데이터 형식 #1(문자열 형식)
+
+Oracle Built-in Data Types
+-Character 형식
+-Numeric 형식
+-Date 형식
+-LOB 형식
+
+VALUE TYPE
+-Character ex)'a'
+-Numeric ex) 38
+-Date ex) '2013-05-06'
+-TIMESTAMP ex)'2013-05-06 10.38.29.0000'
+
+
+오라클 데이터 형식
+Character 형식 : CHAR(), VARCHAR2(), NCHAR() : 세계 각국의 언어 사용 할 때, NVARCHAR() : 전과 같음
+
+NCHAR() : 공간 절약, MAX 값 - 4000 BYTE
+
+
+
+*오라클 SQL 데이터 형식 #2 (숫자/날짜 형식)
+
+Character 형식
+
+Long - 이제 잘 안쓰임(CLOB가 대신함) 
+
+CLOB - 대용량 텍스트 데이터 타입(최대 4Gbyte)
+NCLOB - 대용량 텍스트 유니코드 데이터 타입(최대 4Gbyte)
+
+
+Numberic 형식
+
+NUMBER - 정수와 실수에 모두 사용, ex) NUMBER(4) : 최대 4자로 이루어진 숫자, NUMBER(6,2) :  소수점 2자리를 초함하는 최대 6자리의 숫자(소수점 둘째 자리에서 반올림)
+
+
+Date 형식
+
+DATE - 4713BC ~ 9999 AD ex)01-JAN-99
+
+TIMSTAMP - NLS_TIMESTAMP_FROMAT 파라미터에 명시된 값을 따름.
+
+
+
+*테이블 수정하기
+
+ALTER TABLE MEMBER MODIFY ID NVARCHAR2(50);
+
+ALTER TABLE MEMBER DROP COLUMN AGE;
+
+ALTER TABLE MEMBER ADD EMAIL VARCHAR2(200);
+
+
+ALTER는 잘 쓰이지 않음
+
+
+
+*쿼리 연습을 위한 테이블 준비하기
+
+쿼리를 위해 생성해야 할 테이블 구조
+
+ROLE -> MEMBER_ROLE -> MEMBER -> NOTICE
+			      -> COMMENT
+
+
+
+*데이터 조작하기 DML
+
+SELECT id user_id, name, pwd FROM MEMBER; (as 생략)
+
+
+
+*데이터 조작하기 update/delete
+
+
+
+*트랜잭션 처리를 위한 COMMIT과 ROLLBACK
+
+트랜잭션이란? 업무 실행단위/논리 명령단위/개념상의
+
+물리적인 명령어 단위 과정
+1.현재 세션을 위한 임시저장소에서 테스트
+2.그동안 다른 세션이 건드리 못하도록 lock
+
+commit을 해야 다른 세션이 저장된 값을 볼 수 있음.
+
+
+
+*연산을 통한 데이터 조회
+
++ : 앞에 문자가 있더라도 숫자라고 인식함.
+|| : 덧셈 연산자, 문자로 인식하고 싶을 때 사용
+
+
+
+*비교 연산자
+
+!= <> ^=   :  같지 않다.
+
+
+
+*관계 연산자
+
+
+
+*패턴 비교 연산자
+
+_ : 한 자릿수를 의미
+
+
+
+*정규식을 이용한 패턴 비교
+
+regexlib.com
+
+
+WHERE REGEXP_LIKE
+
+^ : 시작
+$ : 끝
+\d : 0~9
+
+
+
+*문자열 비교를 위한 정규식
+
+\w : 하나의 글자
++ : 1개 이상
+
+
+
+*ROWNUM 그리고 행 제한하기
+
+행을 제한하기
+
+rownum
+
+select * from notice where rownum between 6 and 10;
+
+select * from (select rownum num, notice.* from notice) where num between 5 and 10;
+
+
+
+*중복 값 제거 DISTINCT
+
+
+
+*중간 요약과 함수 단원 안내
+
+SQL : DB에 질의
+DBMS : DB를 관리
+DB : 데이터를 모아서 쓰는 것
+
+
+
+*문자열 내장 함수
+
+함수의 구분
+-문자열 함수
+-숫자 함수
+-날짜 함수
+-변환 함수
+-NULL 관련 함수
+-집계 함수
+
+
+문자열 함수
+문자열 추출함수 SUBSTR(문자열, 시작위치, 길이)
+SELECT SUBSTR('HELLO',1,3)FROM DUAL; //HEL
+SELECT SUBSTRB('HELLO',3)FROM DUAL; 
+
+
+문자열 덧셈 함수
+SELECT CONCAT('홍','길동') FROM DUAL;
+SELECT 3 || '4' FROM DUAL;
+
+
+문자열 트림 함수
+SELECT LTRIM('	HELLO	') FROM DUAL; //왼쪽 공백 없앰
+SELECT RTRIM('	HELLO	') FROM DUAL; //오른쪽 공백 없앰
+SELECT TRIM('	HELLO	') FROM DUAL; //양쪽 공백 없앰
+
+
+문자열 소문자 똔느 대문자로 변경하기
+SELECT LOWER('NeWIEC') FROM DUAL;
+SELECT UPPER('NeWIEC') FROM DUAL;
+대소문자 관계 없이 비교할 때 많이 사용
+
+
+문자열 대치 함수 REPLACE(문자열, 찾는 문자열, 대치할 문자열) / TRANSLATE()
+SELECT REPLACE('WHERE WE ARE','WE','YOU') FROM DUAL;  WE -> YOU
+SELECT TRANSLATE('WHERE WE ARE','WE','YOU') FROM DUAL; //W -> Y, E -> Y
+
+
+함수사용
+
+문자열 패딩 함수
+SELECT LPAD('HELLO',5) FROM DUAL; 
+SELECT LPAD('HELLO',5,'0') FROM DUAL;
+SELECT LPAD('HELLO',10,'0') FROM DUAL; //00000HELLO
+SELECT RPAD('HELLO',10,'0') FROM DUAL; //HELLO00000
+
+
+문자열 함수
+첫 글자를 대문자로 바꾸는 함수 INITCAP(문자열)
+SELECT INITCAP('the...') FROM DUAL;
+
+
+숫자를 반환하는 문자열 함수
+문자열 검색 함수 INSTR(문자열, 검색문자열, 위치 ,찾을 수)
+SELECT INSTR('ALL WE NEED TO IS TO','TO') FROM DUAL;
+SELECT INSTR('ALL WE NEED TO IS TO','TO',15) FROM DUAL; //TO를 두 번째 거를 찾고 싶을 때(시작 위치 15)
+SELECT INSTR('ALL WE NEED TO IS TO','TO',1,2) FROM DUAL; //첫 번째 찾고, 두 번째 찾은 값을 달라고 할 때
+
+
+숫자를 반환하는 문자열 함수
+문자열 길일를 얻는 함수
+SELECT LENGTH('WHER') FROM DUAL;
+
+
+코드 값을 반환하는 함수
+SELECT ASCII('A') FROM DUAL;
+SELECT CHR(65) FROM DUAL;
+
+
+
+*숫자 내장 함수
+
+절대값을 구하는 함수 ABS(n)
+SELECT ABS(35),ABS(-35) FROM DUAL;  //35 35
+
+
+음수/양수를 알려주는 함수 SIGN(n)
+SELECT SIGN(35),SIGN(-35),SIGN(0) FROM DUAL; //1 -1 0
+
+
+숫자의 반올림 값을 알려주는 함수 ROUND(n,i)
+SELECT ROUND(34.456789),ROUND(34.56789) FROM DUAL;
+// 34 35
+SELECT ROUND(34.456789,2),ROUND(34.56789,3) FROM DUAL; //34.46 34.568
+
+
+숫자의 나머지 값을 반환하는 함수 MOD(n1,n2)
+SELECT TRUNC(17/5) 몫, MOD(17,5) 나머지 FROM DUAL;
+//3 2
+
+
+숫자의 제곱을 구하는 함수와 제곱근을 구하는 함수 POWER(n1,n2) / SQRT(n)
+SELECT POWER(5,2),SQRT(25) FROM DUAL;
+//25 5
+
+
+
+*날짜 함수
+
+현재 시간을 얻는 함수
+SELECT SYSDATE, CURRENT_DATE, SYSTIMESTAMP, CURRENT_TIMESTAMP FROM DUAL;
+//현재시간을 나타내 줌
+
+
+세션 시간과 포맷 변경
+ALTER SESSION SET TIME_ZONE = '-1:0'
+ALTER SESSION SET NLS_DATE_FORMAT = 'YYYY-MM-DD HH24:MI:SS'
+
+
+날짜 추출함수 EXTRACT
+SELECT EXTRACT(YEAR FROM SYSDATE) FROM DUAL;
+SELECT EXTRACT(MONTH FROM SYSDATE) FROM DUAL;
+SELECT EXTRACT(DAY FROM SYSDATE) FROM DUAL;
+SELECT EXTRACT(MINUTE FROM SYSDATE) FROM DUAL;
+SELECT EXTRACT(SECOND FROM SYSDATE) FROM DUAL;
+
+
+날짜의 차이를 알아내는 함수 MONTH_BETWEEN(날짜, 날짜)
+SELECT MONTHS_BETWEEN(SYSDATE, TO_DATE('2013-12-25'))FROM DUAL;
+//현재 날짜에서 2013-12-25일 까지의 기간 출력
+
+
+다음 요일을 알려준느 함수 NEXT_DAY(현재날짜, 다음요일)
+SELECT NEXT_DAY(SYSDATE,'토요일') FROM DUAL;
+SELECT NEXT_DAY(SYSDATE,'토') FROM DUAL;
+SELECT NEXT_DAY(SYSDATE,'7') FROM DUAL;
+//다음 토요일 날짜를 출력
+
+
+월의 마지막 일자를 알려주는 함수 LAST_DAY(날짜)
+SELECT LAST_DAY(SYSDATE) FROM DUAL;
+//이번 달 마지막 날 출력
+SELECT LAST_DAY(ADD_MONTHS(SYSDATE,1)) FROM DUAL;
+//다음 달 마지막 날 출력
+
+
+
+*변환 함수
+
+숫자 -> 문자열
+TO_CHAR()
+
+문자열-> 날짜
+TO_DATE()
+
+날짜 -> 문자열
+TO_CHAR()
+
+문자열->숫자
+TO_NUMBER()
+
+
+NUMBER 형식을 문자열로 변환 TO_CHAR(NUMBER)
+SELECT TO_CHAR(12345678,'$99,99,99,99,99') FROM DUAL;
+//12,34,56,78
+
+
+DATE 형식을 문자열로 변환 TO_CHAR(DATETIME)
+SELECT TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') FROM DUAL;
+//2021-10-19 18:20:32
+
+
+문자열을 날짜 형식으로 변환하는 함수 TO_DATE(문자열, 날짜포맷)
+SELECT TO_DATE('1994-01-01','YYYY-MM-DD') FROM DUAL;
+//94-01-01
+SELECT TO_DATE('1994-01-01') FROM DUAL;
+//94-01-01
+
+
+문자열을 숫자형식으로 변환하는 함수 TO_TIMESTAMP(문자열)
+SELECT TO_TIMESTAMP('1994-01-01','YYYY-MM-DD') FROM DUAL;
+//94-01-01
+
+
+문자열을 숫자형식으로 변환하는 함수 TO_NUMBER(문자열)
+SELECT TO_NUMBER('1994') FROM DUAL;
+//1994
+
+
+
+*NULL 관련 함수
+
+반환 값이 NULL일 경우에 대체 값을 제공하는 NVL(NULL, 대체값) 함수
+SELECT NVL(AGE,0) FROM MEMBERS;
+//NULL이 있으면 0으로 대체
+
+
+NVL에서 조건을 하나 더 확장한 NVL2(입력값, NOTNULL 대체값, NULL 대체값) 함수
+SELECT NVL2(AGE, 100/AGE, 0) FROM MEMBER;
+//NULL이면 0반환 아니면 100/AGE 실행
+
+
+두 값이 같은 경우 NULL 그렇지 않은 경우 첫 번째 값 반환 NULLIF(값1, 값2) 함수
+SELECT NULLIF(AGE, 19) FROM MEMBER;
+//AGE가 19이면 NULL로 출력
+
+
+기타 함수
+
+조건에 따른 값 선택하기 DECODE(기준값, 비굣값, 출력값, 비굣값, 출력값)
+SELECT DECODE(GENDER,'남성',1,2) FROM MEMBER;
+
+
+
+*SELECT 구절
+
+연산 절  SELECT문의 구절-->(순서가 바뀌면 안 된다.)
+SELECT, FROM , WHERE, GROUP BY, HAVING, ORDER BY
+
+SELECT * FROM MEMBER ORDER BY NAME DESC;
+
+
+
+*집계 함수와 GROUP BY
+
+집계 함수
+SUM, MIN, MAX, COUNT, AVG
+
+SELECT COUNT(ID) FROM NOTICE;
+//*은 약간 느려지기 때문에 ID를 쓰는 게 바람직
+
+SELECT WRITER_ID, COUNT(ID) COUNT FROM NOTICE GROUP BY writer_id;
+
+
+실행 순서
+
+FROM -> CONNECT BY -> WHERE -> GROUP BY -> HAVING -> SELECT -> ORDER BY
+
+
+
+*HAVING
+
+SELECT COUNT(ID)FROM NOTICE GROUP BY WRITER_ID HAVING COUNT(ID) <= 2;
+
+
+
+*순위 함수
+
+SELECT ROW_NUMBER() OVER (ORDER BY HIT), ID, TITLE, WRITER_ID, REGDATE, HIT
+FROM NOTICE
+//앞에 ROWNUM이 붙고 HIT로 오름차순 정렬이 된다.
+
+SELECT RANK() OVER (ORDER BY HIT), ID, TITLE, WRITER_ID, REGDATE, HIT
+FROM NOTICE
+//등수가 매겨짐. 
+
+SELECT DENSE_RANK() OVER (ORDER BY HIT), ID, TITLE, WRITER_ID, REGDATE, HIT
+FROM NOTICE
+//공동 순위 뒤에 그 다음 순위가 매겨짐.(공동 1위 -> 2위 -> 공동 3위 -> 4위)
+
+SELECT DENSE_RANK() OVER (PARTITION BY WRITER_ID ORDER BY HIT), ID, TITLE, WRITER_ID, REGDATE, HIT
+FROM NOTICE
+//그룹별로 정렬됨(오름차순)
+
+
+
+*부조회(서브쿼리)
+
+서브 쿼리를 사용하는 경우
+
+구절의 순서를 바꿔야 하는 경우
+SELECT * FROM MEMBER WHERE ROWNUM BETWEEN 1 AND 10
+-> 최신 등록순으로 정렬한 결과에서 상위 열 명을 원하는 경우라면?
+
+SELECT * 
+FROM (SELECT * FROM MEMBER ORDER BY REGDATE DESC)
+WHERE ROWNUM BETWEEN 1 AND 5;
+
+
+
+*INNER 조인(JOIN) : 참조키를 기준으로 일치하는 행만 조인
+
+조인의 종류
+-INNER JOIN
+-OUTER JOIN
+-SELF JOIN
+-CROSS JOIN
+
+select * from member inner join notice on member.id = notice.writer_id;
+
+관계가 있는 것들만 합치는 걸 INNER JOIN
+
+
+
+*OUTER JOIN : 참조키를 기준으로 일치하지 않는 행도 포함하는 조인
+
+MEMBER LEFT/RIGHT/FULL OUTER JOIN NOTICE ON MEMBER."ID" = NOTICE.WRITER
+
+select * from notice n left outer join member m on n.writer_id = m.id;  
+
+
+INNER JOIN보다 OUTER JOIN을 더 많이 사용한다.
+
+
+
+*내부 조인 연습
+
+필드 이름의 충돌문제
+
+게시글의 컬럼명을 식별하기 위해 테이블명을 사용
+컬럼을 지정하는 식별자를 줄이기 위해서 테이블의 별칭을 사용
+
+select n.id n.writer_id, m.name from member m inner join notice n on m.id = n.writer_id;
+
+->
+
+select n.id n.writer_id, m.name, count(n.id)from member m left outer join notice n on m.id = n.writer_id group by m.id, m.name;
+
+
+
+*self join
+
+자기 조인
+
+select m.*, b.name boos_name
+from member m left outer join member b on b.id = m.boss_id;
+
+
+
+
+
+
+
+-------------------------------------------------
+*쿼리 실습하기
+
+쿼리를 위해 생셩해야 할 테이블 구조
+
+테이블 생성하기
+
+수업용 테이블의 구성
+
+
+JDBC 코드 : 첫 번째 게시글 제목 출력하기
+
+
+String url = "jdbc:oracle:thin:@localhost:1521/xepdb1";
+String sql = "SELECT * FROM NOTICE";
+
+
+JDBCPrj 자바 프로젝트 만들고
+ex1 패키지 안에 program 클래스 안에
+
+String url = "jdbc:oracle:thin:@localhost:1521/xepdb1";
+		String sql = "SELECT * FROM NOTICE";
+		
+		Class.forName("oracle.jdbc.driver.OracleDriver");
+		Connection con = DriverManager.getConnection(url,"newlec","oracle");
+		Statement st = con.createStatement();
+		ResultSet rs = st.executeQuery(sql);
+		
+		if(rs.next()) {
+			String title = rs.getString("TITLE");
+			System.out.println(title);
+		}
+		rs.close();
+		st.close();
+		con.close();
+
+하고 NOTICE 테이블 안에
+
+INSERT INTO NOTICE VALUES(1, 'JDBC란 무엇인가', 'newlec','aaa',SYSDATE,0,'');
+입력하고
+COMMIT; 하면
+
+이클립스 콘솔에 JDBC란 무엇인가 출력 
+
+
+
+*혼잘 풀어보는 문제 #1
+
+JDBC 코드 : 레코드의 모든 컬럼 출력하기, HIT가 10이상 레코드만 출력하기
+
+
+게시글을 필터링 해야 하는 경우는? 만약에 CODE>10인 게시글만 보려면?
+
+게시글을 필터링 해야 하는 경우
+
+데이터 필터링, 정렬, 그룹화 등의 모든 데이터 연산은 데이터베이스에서 처리한다.
+
+자바는 UI 레이아웃만 <-> 데이터 가공처리는 SQL이
+
+
+
+*트랜잭션 처리란
+
+트랜잭션이란?
+-하나의 단위로 수행되길 바라는 쿼리의 묶음(=업무 수행단위, 논리적인 수행단위).
+
+트랜잭션 처리란?
+ACID : 원자성(깨지지 않는다.), 일관성(결함이 발생하지 않도록 일관성을 유지해야 한다.), 고립성(처리가 끝날 때까지 건들지 못 하게 하는 것.), 지속성(처리가 끝나고 변경된 내용이 데이터베이스에 영구적으로 저장하는 것.(commit))
+
+
+
+*데이터 입력을 위한 쿼리문 준비하기
+
+
+
+
+
+
+-------------------------------------------------
+
+*53강
+
+글 목록 구현하기
+
+list.jsp에
+
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.Statement"%>
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.Connection"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+<%
+	String url = "jdbc:oracle:thin:@localhost:1521/xepdb1";
+	String sql = "SELECT * FROM NOTICE WHERE HIT >= 10";
+	
+	Class.forName("oracle.jdbc.driver.OracleDriver");
+	Connection con = DriverManager.getConnection(url,"newlec","oracle");
+	Statement st = con.createStatement();
+	ResultSet rs = st.executeQuery(sql);
+%>
+
+
+
+
+
+
+
+
